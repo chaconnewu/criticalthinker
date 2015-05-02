@@ -4,8 +4,174 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.12.0/semantic.min.css" />
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.12.0/semantic.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/ace.js"></script>
+    <script src="./js/procon.js"></script>
+    <style>
+    .editor {
+        /** Setting height is also important, otherwise editor wont showup**/
+        height: 120px;
+        width: 100%;
+    }
+
+    </style>
 </head>
 <body>
+<div class="ui inverted menu">
+  <a class="active item">
+    <i class="home icon"></i> Home
+  </a>
+  <a class="item">
+    <i class="mail icon"></i> Messages
+  </a>
+  <a class="item">
+    <i class="user icon"></i> Friends
+  </a>
+</div>
 
+<div class='ui grid'>
+  <div class='seven wide column'>
+
+<div class="ui styled accordion">
+  <div class="active title">
+    <i class="dropdown icon"></i>
+    Level 1
+  </div>
+  <div class="active content">
+      <div class='row'>
+            Welcome to level 1
+      </div>
+      <hr />
+      <div class='row'>
+      <i class="add square icon">Add</i>
+
+      </div>
+
+
+
+    <div class="accordion">
+      <div class="title">
+          <i class="dropdown icon"></i>
+          Level 1A
+      </div>
+      <div class="content">
+        <p>Level 1A Contents</p>
+      </div>
+      <div class="title">
+          <i class="dropdown icon"></i>
+          Level 1B
+      </div>
+      <div class="content">
+          Level 1B Contents
+      </div>
+      <div class="title">
+          <i class="dropdown icon"></i>
+          <input value="Level 1C" />
+          <input type='submit' onclick='clicked()' value='submit' />
+
+      </div>
+      <div class="content">
+          <div id='editor'  class="editor">
+
+
+          </div>
+          <div class='ui blue button' onclick="edit()">edit</div>
+      </div>
+    </div>
+  </div>
+  <div class="title">
+    <i class="dropdown icon"></i>
+    Level 2
+  </div>
+  <div class="content">
+
+    <p>Welcome to level 2</p>
+  </div>
+</div>
+  </div>
+  <div class='seven wide column'>
+
+<div class="ui styled accordion">
+  <div class="active title">
+    <i class="dropdown icon"></i>
+    Level 1
+  </div>
+  <div class="active content">
+    Welcome to level 1
+    <div class="accordion">
+      <div id='soso' class="title">
+          <i class="dropdown icon"></i>
+          Level 1A
+      </div>
+      <div class="content">
+        <p>Level 1A Contents</p>
+      </div>
+      <div class="title">
+          <i class="dropdown icon"></i>
+          Level 1B
+      </div>
+      <div class="content">
+          Level 1B Contents
+      </div>
+      <div class="title">
+          <i class="dropdown icon"></i>
+          <input value="Level 1C" />
+          <input type='submit' onclick='clicked()' value='submit' />
+
+      </div>
+      <div class="content">
+          <div id='editor'  class="editor"></div>
+          <div class='ui blue button' onclick="edit()">edit</div>
+      </div>
+    </div>
+  </div>
+  <div class="title">
+    <i class="dropdown icon"></i>
+    Level 2
+  </div>
+  <div class="content">
+    <p>Welcome to level 2</p>
+  </div>
+</div>
+  </div>
+</div>
+
+<hr />
+
+<script>
+$('.ui.accordion')
+  .accordion({
+    exclusive: false
+  })
+;
+function clicked() {
+  console.log('here');
+}
+
+function edit() {
+  var authorEditor = ace.edit("editor");
+
+  authorEditor.getSession().setMode("ace/mode/text");
+  authorEditor.getSession().setUseWrapMode(true);
+  authorEditor.setReadOnly(false);
+}
+
+var authorEditor = ace.edit("editor");
+
+authorEditor.getSession().setMode("ace/mode/text");
+authorEditor.getSession().setUseWrapMode(true);
+authorEditor.setReadOnly(true);
+authorEditor.renderer.setShowGutter(false);
+
+// authorEditor.setReadOnly(true);
+var titles = document.getElementsByClassName('title');
+for (var i = 0; i < titles.length; i += 1) {
+  titles[i].addEventListener('click', function(){
+  console.log('clicked');
+  $('#soso').accordion('open');
+  });
+}
+
+
+</script>
 </body>
 </html>

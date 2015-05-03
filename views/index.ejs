@@ -18,7 +18,7 @@
     <style>
     .editor {
         /** Setting height is also important, otherwise editor wont showup**/
-        height: 90px;
+        height: 60px;
         width: 100%;
     }
 
@@ -39,129 +39,21 @@
 
 
 <div class="ui grid">
+  <div class='row'>
+    <div id='expandAllButton' class='ui large button'> Expand All </div>
+    <div id='callapseAllButton' class='ui large button'> Collapse All </div>
+    <div id='addProConButton' class='ui large button'>Add ProCon</div>
+  </div>
   <div id="pro" class="six wide column"></div>
   <div id="con" class="six wide column"></div>
 </div>
 
-<div class='ui grid'>
-  <div class='six wide column'>
-
-<div class="ui styled accordion">
-  <div class="active title">
-    <i class="dropdown icon"></i>
-    Level 1
-  </div>
-  <div class="active content">
-      <div class='row'>
-            Welcome to level 1
-      </div>
-      <hr />
-      <div class='row'>
-      <i class="add square icon">Add</i>
-
-      </div>
-
-
-
-    <div class="accordion">
-      <div class="title">
-          <i class="dropdown icon"></i>
-          Level 1A
-      </div>
-      <div class="content">
-        <p>Level 1A Contents</p>
-      </div>
-      <div class="title">
-          <i class="dropdown icon"></i>
-          Level 1B
-      </div>
-      <div class="content">
-          Level 1B Contents
-      </div>
-      <div class="title">
-          <i class="dropdown icon"></i>
-          <input value="Level 1C" />
-          <input type='submit' onclick='clicked()' value='submit' />
-
-      </div>
-      <div class="content">
-          <div id='editor'  class="editor">
-
-
-          </div>
-          <div class='ui blue button' onclick="edit()">edit</div>
-      </div>
-    </div>
-  </div>
-  <div class="title">
-    <i class="dropdown icon"></i>
-    Level 2
-  </div>
-  <div class="content">
-
-    <p>Welcome to level 2</p>
-  </div>
-</div>
-  </div>
-  <div class='six wide column'>
-
-<div class="ui styled accordion">
-  <div class="active title">
-    <i class="dropdown icon"></i>
-    Level 1
-  </div>
-  <div class="active content">
-    Welcome to level 1
-    <div class="accordion">
-      <div id='soso' class="title">
-          <i class="dropdown icon"></i>
-          Level 1A
-      </div>
-      <div class="content">
-        <p>Level 1A Contents</p>
-      </div>
-      <div class="title">
-          <i class="dropdown icon"></i>
-          Level 1B
-      </div>
-      <div class="content">
-          Level 1B Contents
-      </div>
-      <div class="title">
-          <i class="dropdown icon"></i>
-          <input value="Level 1C" />
-          <input type='submit' onclick='clicked()' value='submit' />
-
-      </div>
-      <div class="content">
-          <div id='editor'  class="editor"></div>
-          <div class='ui blue button' onclick="edit()">edit</div>
-      </div>
-    </div>
-  </div>
-  <div class="title">
-    <i class="dropdown icon"></i>
-    Level 2
-  </div>
-  <div class="content">
-    <p>Welcome to level 2</p>
-  </div>
-</div>
-  </div>
-</div>
 
 <hr />
 <script src="https://togetherjs.com/togetherjs-min.js"></script>
 <script>
 $().ready(function () {
-    // $('.ui.accordion').accordion({
-    //   exclusive: false
-    // });
-  // $(document).on('click', '.ui.accordion', function() {
-  //   console.log('.ui.accordion');
 
-
-  // });
 });
 
 $(document).on('accordion', '.ui.accordion', function() {
@@ -188,12 +80,12 @@ function clicked() {
 // authorEditor.renderer.setShowGutter(false);
 
 // authorEditor.setReadOnly(true);
-var titles = document.getElementsByClassName('title');
-for (var i = 0; i < titles.length; i += 1) {
-  titles[i].addEventListener('click', function(){
-  $('#soso').accordion('open');
-  });
-}
+// var titles = document.getElementsByClassName('title');
+// for (var i = 0; i < titles.length; i += 1) {
+//   titles[i].addEventListener('click', function(){
+//   $('#soso').accordion('open');
+//   });
+// }
 
 
 </script>

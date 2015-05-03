@@ -2,14 +2,18 @@ var mongoose = require('mongoose');
 
 var proconSchema = mongoose.Schema({
   topic: String,
-  pro: [{
+  pro:[{
       content: String,
-      support: []
+      support: [{
+        content: String
+      }]
     }]
   ,
   con: [{
       content: String,
-      support: []
+      support: [{
+        content: String
+      }]
     }]
 
 });

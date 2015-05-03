@@ -5,11 +5,20 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.12.0/semantic.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/ace.js"></script>
-    <script src="./js/procon.js"></script>
+    <script src="./js/app.js"></script>
+    <script>
+    // TogetherJSConfig_hubBase = "http://dataagent.org:8001";
+    // TogetherJSConfig_findRoom = {prefix: "111", max: 5};
+    // TogetherJSConfig_autoStart = true;
+    // TogetherJSConfig_suppressJoinConfirmation = true;
+    // TogetherJSConfig_storagePrefix = "ct";
+    // TogetherJSConfig_cloneClicks = true;
+    </script>
+
     <style>
     .editor {
         /** Setting height is also important, otherwise editor wont showup**/
-        height: 120px;
+        height: 90px;
         width: 100%;
     }
 
@@ -28,8 +37,14 @@
   </a>
 </div>
 
+
+<div class="ui grid">
+  <div id="pro" class="six wide column"></div>
+  <div id="con" class="six wide column"></div>
+</div>
+
 <div class='ui grid'>
-  <div class='seven wide column'>
+  <div class='six wide column'>
 
 <div class="ui styled accordion">
   <div class="active title">
@@ -88,7 +103,7 @@
   </div>
 </div>
   </div>
-  <div class='seven wide column'>
+  <div class='six wide column'>
 
 <div class="ui styled accordion">
   <div class="active title">
@@ -136,37 +151,46 @@
 </div>
 
 <hr />
-
+<script src="https://togetherjs.com/togetherjs-min.js"></script>
 <script>
-$('.ui.accordion')
-  .accordion({
-    exclusive: false
-  })
-;
+$().ready(function () {
+    // $('.ui.accordion').accordion({
+    //   exclusive: false
+    // });
+  // $(document).on('click', '.ui.accordion', function() {
+  //   console.log('.ui.accordion');
+
+
+  // });
+});
+
+$(document).on('accordion', '.ui.accordion', function() {
+  console.log('acc');
+});
+
 function clicked() {
-  console.log('here');
+
 }
 
-function edit() {
-  var authorEditor = ace.edit("editor");
+// function edit() {
+//   var authorEditor = ace.edit("editor");
 
-  authorEditor.getSession().setMode("ace/mode/text");
-  authorEditor.getSession().setUseWrapMode(true);
-  authorEditor.setReadOnly(false);
-}
+//   authorEditor.getSession().setMode("ace/mode/text");
+//   authorEditor.getSession().setUseWrapMode(true);
+//   authorEditor.setReadOnly(false);
+// }
 
-var authorEditor = ace.edit("editor");
+// var authorEditor = ace.edit("editor");
 
-authorEditor.getSession().setMode("ace/mode/text");
-authorEditor.getSession().setUseWrapMode(true);
-authorEditor.setReadOnly(true);
-authorEditor.renderer.setShowGutter(false);
+// authorEditor.getSession().setMode("ace/mode/text");
+// authorEditor.getSession().setUseWrapMode(true);
+// authorEditor.setReadOnly(true);
+// authorEditor.renderer.setShowGutter(false);
 
 // authorEditor.setReadOnly(true);
 var titles = document.getElementsByClassName('title');
 for (var i = 0; i < titles.length; i += 1) {
   titles[i].addEventListener('click', function(){
-  console.log('clicked');
   $('#soso').accordion('open');
   });
 }

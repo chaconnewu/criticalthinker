@@ -8,10 +8,19 @@ var express = require('express'),
 
 mongoose.connect(configDB.url);
 require('./app/routes.js')(app);
+app.use('/', express.static(path.join(__dirname, 'views')));
+// var ProCon = require('./app/models/procon.js');
+// procon = new ProCon();
+// procon.topic = 'test';
+// procon.save(function(err) {
+//   if (err) {
+//     throw err;
+//   }
+// });
 
 app.use(bodyParser());      // get information from html forms
 app.set('view engine', 'ejs');   // set up ejs for templating
-app.use('/', express.static(path.join(__dirname, 'views')));
+
 
 app.listen(port);
 console.log('The magic happens on port ' + port);

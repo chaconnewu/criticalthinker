@@ -1,16 +1,17 @@
 var mongoose = require('mongoose');
 
 var proconSchema = mongoose.Schema({
-  pro: {[{
-      content: "",
+  topic: String,
+  pro: [{
+      content: String,
       support: []
     }]
-  },
-  con: {[{
-      content: "",
+  ,
+  con: [{
+      content: String,
       support: []
     }]
-  }
+
 });
 
-module.exports = mongoose.module('ProCon', proconSchema);
+module.exports = mongoose.model('ProCon', proconSchema);

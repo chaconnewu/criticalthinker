@@ -40,6 +40,7 @@ var proconModel = (function($) {
   }
 
   function getProConData() {
+    console.log(proconData);
     return proconData;
   }
 
@@ -69,9 +70,8 @@ var proconView = (function($) {
 
   function init(proconData) {
     console.log('view init');
-    console.log(proconData);
 
-    render();
+    render(proconData);
     renderAceEditor();
     registerEvents();
   }
@@ -124,7 +124,7 @@ var proconView = (function($) {
     });
   }
 
-  function createTitle(argumentType) {
+  function createTitle(content, argumentType) {
     var title = document.createElement('div');
     title.className = argumentType + ' ' + 'active title';
 
@@ -132,20 +132,19 @@ var proconView = (function($) {
     icon.className = 'dropdown icon';
 
     title.appendChild(icon);
-    title.appendChild(document.createTextNode('Pro claim'));
+    title.appendChild(document.createTextNode(content.slice(0, 70) + ' ...'));
 
     return title;
   }
 
-  function createContent() {
+  function createContent(contentString) {
     var content = document.createElement('div');
     content.className = 'active content';
 
     // create Ace editor
     var editor = document.createElement('div');
     editor.className = "editor";
-    // var editorID = 'ace' + Math.floor(Math.random()*1000);
-    // editor.setAttribute('id', editorID);
+    editor.appendChild(document.createTextNode(contentString));
 
     content.appendChild(editor);
 
@@ -175,32 +174,79 @@ var proconView = (function($) {
     return row;
   }
 
-  // Supporting argument for claims
-  function createSupport() {
-    var title = createTitle("support");
-    var content = createContent();
+  function createFunctionIconsForClaim() {
+    var row = document.createElement('div');
+    row.className = 'row';
 
+    var saveIcon = document.createElement('i');
+    saveIcon.className = 'large save icon';
+
+    var expandIcon = document.createElement('i');
+    expandIcon.className = 'large expand icon'
+
+    var addIcon = document.createElement('i');
+    addIcon.className = 'large plus icon';
+
+    var removeIcon = document.createElement('i');
+    removeIcon.className = 'large red remove icon'
+
+    row.appendChild(saveIcon);
+    row.appendChild(expandIcon);
+    row.appendChild(addIcon);
+    row.appendChild(removeIcon);
+    return row;
+  }
+
+  function createFunctionIoncsForSupport() {
+    var row = document.createElement('div');
+    row.className = 'row';
+
+    var saveIcon = document.createElement('i');
+    saveIcon.className = 'large save icon';
+
+    var removeIcon = document.createElement('i');
+    removeIcon.className = 'large red remove icon'
+
+    row.appendChild(saveIcon);
+    row.appendChild(removeIcon);
+    return row;
+  }
+
+  // Supporting argument for claims
+  function createSupport(supportContent) {
+    var title = createTitle(supportContent);
+    var content = createContent(supportContent);
+    var icons = createFunctionIoncsForSupport();
     var support = document.createDocumentFragment();
     support.appendChild(title);
+    content.appendChild(icons);
     support.appendChild(content);
+
+
 
     return support;
   }
 
   // Pro or Con claims. Can contain multiple supporting argument.
-  function createClaim() {
-    var title = createTitle("claim");
-    var buttons = createFunctionButtons();
-    var content = createContent();
+  function createClaim(claimRaw) {
+    var title = createTitle(claimRaw.content, "claim");
+    // var buttons = createFunctionButtons();
+    var icons = createFunctionIconsForClaim();
+    var content = createContent(claimRaw.content);
     var claim = document.createElement('div');
     var children = document.createElement('div');
+    var i;
 
     claim.className = 'ui styled accordion';
     children.className = 'accordion';
 
-    children.appendChild(createSupport());
-    children.appendChild(createSupport());
-    content.appendChild(buttons);
+
+    for (i = 0; i < claimRaw.support.length; i += 1) {
+      children.appendChild(createSupport(claimRaw.support[i].content));
+    }
+
+    // content.appendChild(buttons);
+    content.appendChild(icons);
     content.appendChild(children);
 
     claim.appendChild(title);
@@ -223,15 +269,20 @@ var proconView = (function($) {
     }
   }
 
-  function render() {
+  function render(proconData) {
     var pro = $('#pro');
     var con = $('#con');
+    var i;
+    // render pro
+    for (i = 0; i < proconData.pro.length; i += 1) {
+      // console.log(proconData.pro[i]);
+      pro.append(createClaim(proconData.pro[i]));
+    }
 
-    pro.append(createClaim());
-    pro.append(createClaim());
-    con.append(createClaim());
-    con.append(createClaim());
-
+    // render con
+    for (i = 0; i < proconData.con.length; i += 1) {
+      con.append(createClaim(proconData.con[i]));
+    }
 
   }
 
@@ -248,7 +299,8 @@ var proconController = (function () {
 
     if (proconModel.getDataReady() === true) {
       clearInterval(interval);
-      proconView.init(proconModel.getProConData());
+      var data = proconModel.getProConData();
+      proconView.init(data[0]);
       $('.ui.accordion').accordion({
         exclusive: false,
         duration: 200,

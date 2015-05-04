@@ -304,7 +304,7 @@ var proconView = (function($) {
   }
 
   function render(proconData) {
-/*
+
     var proandcon = $('#proandcon'),
         i;
     proandcon.html('');
@@ -327,24 +327,24 @@ var proconView = (function($) {
       row.appendChild(con);
       proandcon.append(row);
     }
-*/
 
-    var pro = $($('.pro')[0]);
-    var con = $($('#con')[0]);
 
-    pro.html("");
-    con.html("");
-    var i;
-    // // render pro
-    for (i = 0; i < proconData.pro.length; i += 1) {
-      // console.log(proconData.pro[i]);
-      pro.append(createClaim(proconData.pro[i]));
-    }
+    // var pro = $($('.pro')[0]);
+    // var con = $($('#con')[0]);
 
-    // // render con
-    for (i = 0; i < proconData.con.length; i += 1) {
-      con.append(createClaim(proconData.con[i]));
-    }
+    // pro.html("");
+    // con.html("");
+    // var i;
+    // // // render pro
+    // for (i = 0; i < proconData.pro.length; i += 1) {
+    //   // console.log(proconData.pro[i]);
+    //   pro.append(createClaim(proconData.pro[i]));
+    // }
+
+    // // // render con
+    // for (i = 0; i < proconData.con.length; i += 1) {
+    //   con.append(createClaim(proconData.con[i]));
+    // }
   }
 
   return {
@@ -461,10 +461,10 @@ var proconController = (function () {
 
       aceItem.getSession().setValue("");
       item.removeAttr('id');
-      
+
 
     });
-    TogetherJS.reinitialize();
+    // TogetherJS.reinitialize();
   }
 
   proconModel.init();

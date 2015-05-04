@@ -2,7 +2,9 @@ var ProCon = require('../app/models/procon.js');;
 
 module.exports = function(app, passport) {
   app.get('/', function(req, res) {
-      res.render('index.ejs');
+      res.render('index.ejs', {
+        user: null
+      });
   });
 
   app.get('/all_procons', function(req, res) {

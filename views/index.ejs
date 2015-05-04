@@ -28,7 +28,7 @@
 <body>
 <div class="ui inverted menu">
   <div class="item">
-    Welcome to Critical Thinker, <string> <%= user.facebook.name %> </string>!
+    Welcome to Critical Thinker, <string> <%= user ? user.facebook.name : ' ' %> </string>!
   </div>
   <div class="item">
     <a href='/logout' class='ui red label'>Logout</a>

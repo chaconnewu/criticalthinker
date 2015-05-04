@@ -1,0 +1,57 @@
+<!-- views/login.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Critical Thinker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.12.0/semantic.min.css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.12.0/semantic.min.js"></script>
+    <style>
+
+    </style>
+</head>
+<body>
+<div class="ui inverted menu">
+  <div class="item">
+    Welcome to Critical Thinker!
+  </div>
+</div>
+
+<div class="ui segment">
+    <div class="ui grid">
+        <div class="four wide column"></div>
+        <div class="six wide column">
+            <h1 class="ui header">Login</h1>
+            <form class="ui form" action="/login" method="post">
+                <div class="required field">
+                    <label>Email/User name</label>
+                    <div class="ui icon input">
+                        <input type='text' placeholder="Email/User name">
+                        <i class="user icon"></i>
+                    </div>
+                </div>
+               <div class="required field">
+                    <label>Password</label>
+                    <div class="ui icon input">
+                        <input type='password'>
+                        <i class="lock icon"></i>
+                    </div>
+                </div>
+                <input type='submit' class="ui blue submit button" value="Login" /> Or login with
+                <a href="/auth/facebook" class="ui facebook button"><i class="facebook icon"></i> Facebook</a>
+
+            </form>
+            <div class='ui divider'></div>
+            <p>Need an account? <a href="/signup">Signup</a></p>
+            <p>Or go <a href="/">Home</a>.</p>
+        </div>
+    </div>
+
+<div class='ui grid'>
+  <div class="five wide column"></div>
+  <div class="seven wide column">Copyright ©2015, CSCL Lab @ The Pennsylvania State University</div>
+</div>
+</div>
+</body>
+</html>
+

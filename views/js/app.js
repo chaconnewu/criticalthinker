@@ -304,6 +304,7 @@ var proconView = (function($) {
   }
 
   function render(proconData) {
+/*
     var proandcon = $('#proandcon'),
         i;
     proandcon.html('');
@@ -326,28 +327,24 @@ var proconView = (function($) {
       row.appendChild(con);
       proandcon.append(row);
     }
+*/
 
+    var pro = $($('.pro')[0]);
+    var con = $($('#con')[0]);
 
-
-
-
-
-    // var pro = $('#pro');
-    // var con = $('#con');
-
-    // pro.html("");
-    // con.html("");
-    // var i;
+    pro.html("");
+    con.html("");
+    var i;
     // // render pro
-    // for (i = 0; i < proconData.pro.length; i += 1) {
-    //   // console.log(proconData.pro[i]);
-    //   pro.append(createClaim(proconData.pro[i]));
-    // }
+    for (i = 0; i < proconData.pro.length; i += 1) {
+      // console.log(proconData.pro[i]);
+      pro.append(createClaim(proconData.pro[i]));
+    }
 
     // // render con
-    // for (i = 0; i < proconData.con.length; i += 1) {
-    //   con.append(createClaim(proconData.con[i]));
-    // }
+    for (i = 0; i < proconData.con.length; i += 1) {
+      con.append(createClaim(proconData.con[i]));
+    }
   }
 
   return {
@@ -434,7 +431,7 @@ var proconController = (function () {
       var proClaimAccordions = $('.pro .ui.accordion');
       var proClaimIndex = proClaimAccordions.index(item);
 
-      console.log(Math.max(proClaimIndex, conClaimIndex));
+//       console.log(Math.max(proClaimIndex, conClaimIndex));
       addSupport(Math.max(proClaimIndex, conClaimIndex));
     });
 
@@ -464,7 +461,10 @@ var proconController = (function () {
 
       aceItem.getSession().setValue("");
       item.removeAttr('id');
+      
+
     });
+    TogetherJS.reinitialize();
   }
 
   proconModel.init();

@@ -99,19 +99,19 @@ var proconView = (function($) {
   }
 
   function registerEvents() {
-    $('#pro .dropdown.icon').click(function(e) {
+    $('.pro .dropdown.icon').click(function(e) {
       // Preventing icon click, which will mess up the interface.
       e.stopPropagation();
     });
-    $('#con .dropdown.icon').click(function(e) {
+    $('.con .dropdown.icon').click(function(e) {
       // Preventing icon click, which will mess up the interface.
       e.stopPropagation();
     });
-    $('#pro .claim.title').click(function(event) {
-      var proClaimTitles = $('#pro .claim.title');
+    $('.pro .claim.title').click(function(event) {
+      var proClaimTitles = $('.pro .claim.title');
       var proClaimIndex = proClaimTitles.index(event.target);
 
-      var conClaimTitles = $('#con .claim.title');
+      var conClaimTitles = $('.con .claim.title');
       var conClaimIndex = proClaimIndex;
       var classList = conClaimTitles[conClaimIndex].className.split(/\s+/);
       var whetherActive = false;
@@ -128,11 +128,11 @@ var proconView = (function($) {
       }
     });
 
-    $('#con .claim.title').click(function(event) {
-      var conClaimTitles = $('#con .claim.title');
+    $('.con .claim.title').click(function(event) {
+      var conClaimTitles = $('.con .claim.title');
       var conClaimIndex = conClaimTitles.index(event.target);
 
-      var proClaimTitles = $('#pro .claim.title');
+      var proClaimTitles = $('.pro .claim.title');
       var proClaimIndex = conClaimIndex;
       var classList = conClaimTitles[proClaimIndex].className.split(/\s+/);
       var whetherActive = false;
@@ -304,22 +304,50 @@ var proconView = (function($) {
   }
 
   function render(proconData) {
-    var pro = $('#pro');
-    var con = $('#con');
+    var proandcon = $('#proandcon'),
+        i;
+    proandcon.html('');
 
-    pro.html("");
-    con.html("");
-    var i;
-    // render pro
     for (i = 0; i < proconData.pro.length; i += 1) {
       // console.log(proconData.pro[i]);
-      pro.append(createClaim(proconData.pro[i]));
+      var row = document.createElement('div');
+      row.className = 'row';
+
+      var pro = document.createElement('div');
+      pro.className = 'pro six wide column';
+
+      pro.appendChild(createClaim(proconData.pro[i]));
+
+      var con = document.createElement('div');
+      con.className = 'con six wide column';
+      con.appendChild(createClaim(proconData.con[i]));
+
+      row.appendChild(pro);
+      row.appendChild(con);
+      proandcon.append(row);
     }
 
-    // render con
-    for (i = 0; i < proconData.con.length; i += 1) {
-      con.append(createClaim(proconData.con[i]));
-    }
+
+
+
+
+
+    // var pro = $('#pro');
+    // var con = $('#con');
+
+    // pro.html("");
+    // con.html("");
+    // var i;
+    // // render pro
+    // for (i = 0; i < proconData.pro.length; i += 1) {
+    //   // console.log(proconData.pro[i]);
+    //   pro.append(createClaim(proconData.pro[i]));
+    // }
+
+    // // render con
+    // for (i = 0; i < proconData.con.length; i += 1) {
+    //   con.append(createClaim(proconData.con[i]));
+    // }
   }
 
   return {
@@ -371,10 +399,6 @@ var proconController = (function () {
         });
       } else {
         var items = curClaim.find('.title');
-
-        // $(items[0]).accordion('open');
-        // console.log($(items[0]));
-        // $(items[1]).accordion('open');
         for (i = 0; i < items.length; i += 1) {
           $(items[i]).accordion({
             exclusive: false,
@@ -390,10 +414,10 @@ var proconController = (function () {
 
       var item = $(this).parent().parent().parent();
 
-      var conClaimAccordions = $('#con .ui.accordion');
+      var conClaimAccordions = $('.con .ui.accordion');
       var conClaimIndex = conClaimAccordions.index(item);
 
-      var proClaimAccordions = $('#pro .ui.accordion');
+      var proClaimAccordions = $('.pro .ui.accordion');
       var proClaimIndex = proClaimAccordions.index(item);
 
       deleteProCon(Math.max(proClaimIndex, conClaimIndex));
@@ -404,10 +428,10 @@ var proconController = (function () {
 
       var item = $(this).parent().parent().parent();
 
-      var conClaimAccordions = $('#con .ui.accordion');
+      var conClaimAccordions = $('.con .ui.accordion');
       var conClaimIndex = conClaimAccordions.index(item);
 
-      var proClaimAccordions = $('#pro .ui.accordion');
+      var proClaimAccordions = $('.pro .ui.accordion');
       var proClaimIndex = proClaimAccordions.index(item);
 
       console.log(Math.max(proClaimIndex, conClaimIndex));
@@ -417,10 +441,10 @@ var proconController = (function () {
     $(".supportIcon .red.remove.icon").click(function() {
       var item = $(this).parent().parent().parent().parent().parent();
 
-      var conClaimAccordions = $('#con .ui.accordion');
+      var conClaimAccordions = $('.con .ui.accordion');
       var conClaimIndex = conClaimAccordions.index(item);
 
-      var proClaimAccordions = $('#pro .ui.accordion');
+      var proClaimAccordions = $('.pro .ui.accordion');
       var proClaimIndex = proClaimAccordions.index(item);
 
       var claimIndex = Math.max(proClaimIndex, conClaimIndex);
@@ -440,7 +464,6 @@ var proconController = (function () {
 
       aceItem.getSession().setValue("");
       item.removeAttr('id');
-      // item.text("");
     });
   }
 

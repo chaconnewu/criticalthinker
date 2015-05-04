@@ -467,7 +467,7 @@ var proconController = (function () {
 
 
     });
-    TogetherJS.reinitialize();
+    // TogetherJS.reinitialize();
   }
 
   proconModel.init();

@@ -417,7 +417,10 @@ var proconController = (function () {
       var proClaimAccordions = $('.pro .ui.accordion');
       var proClaimIndex = proClaimAccordions.index(item);
 
-      deleteProCon(Math.max(proClaimIndex, conClaimIndex));
+      console.log('In red remove icon');
+      console.log(proClaimAccordions.index(item));
+
+      // deleteProCon(Math.max(proClaimIndex, conClaimIndex));
     });
 
     $(".claimIcon .plus.icon").click(function() {
@@ -464,7 +467,7 @@ var proconController = (function () {
 
 
     });
-    // TogetherJS.reinitialize();
+    TogetherJS.reinitialize();
   }
 
   proconModel.init();

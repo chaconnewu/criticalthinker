@@ -420,7 +420,7 @@ var proconController = (function () {
       console.log('In red remove icon');
       console.log(proClaimAccordions.index(item));
 
-      // deleteProCon(Math.max(proClaimIndex, conClaimIndex));
+      deleteProCon(Math.max(proClaimIndex, conClaimIndex));
     });
 
     $(".claimIcon .plus.icon").click(function() {

@@ -9,7 +9,8 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     path = require('path'),
     session = require('express-session'),
-    configDB = require('./config/database.js');
+    configDB = require('./config/database.js'),
+    http = require('http');
 
 mongoose.connect(configDB.url);
 require('./config/passport')(passport);
@@ -61,4 +62,5 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 require('./app/routes.js')(app, passport);
 app.listen(port);
+// http.createServer(app).listen(port, 'http://dataagent.org');
 console.log('The magic happens on port ' + port);

@@ -47,9 +47,9 @@ var proconModel = (function($) {
     proconData[0].con.unshift(createEmptyClaim());
   }
 
-  function addSupport(claimIdx) {
-    proconData[0].pro[claimIdx].support.unshift(createEmptySupport());
-    proconData[0].con[claimIdx].support.unshift(createEmptySupport());
+  function addSupport(side, claimIdx) {
+    proconData[0][side][claimIdx].support.unshift(createEmptySupport());
+//     proconData[0].con[claimIdx].support.unshift(createEmptySupport());
     console.log(proconData);
   }
 
@@ -59,9 +59,9 @@ var proconModel = (function($) {
 
   }
 
-  function deleteSupport(claimIdx, supportIdx) {
-    proconData[0].pro[claimIdx].support.splice(supportIdx, 1);
-    proconData[0].con[claimIdx].support.splice(supportIdx, 1);
+  function deleteSupport(side, claimIdx, supportIdx) {
+    proconData[0][side][claimIdx].support.splice(supportIdx, 1);
+//     proconData[0].con[claimIdx].support.splice(supportIdx, 1);
   }
 
   function getDataReady() {
@@ -95,11 +95,13 @@ var proconModel = (function($) {
 
 
 var proconView = (function($) {
-
+	var proconDataRef;
+	
   function init(proconData) {
     console.log('view init');
-
-    render(proconData);
+	proconDataRef = proconData;
+//     render(proconData);
+	render();
     renderAceEditor();
     registerEvents();
   }
@@ -206,68 +208,50 @@ var proconView = (function($) {
     return row;
   }
 
-  function createFunctionIconsForClaim() {
+  function createFunctionIconsForClaim(side, idx) {
     var row = document.createElement('div');
     row.className = 'claimIcon row';
-
-/*
-    var expandIcon = document.createElement('i');
-    expandIcon.className = 'large expand icon'
-*/
 
     var addIcon = document.createElement('i');
     addIcon.className = 'large plus icon';
 
-/*
-    var saveIcon = document.createElement('i');
-    saveIcon.className = 'large save icon';
-
-    var clearIcon = document.createElement('i');
-    clearIcon.className = 'large recycle icon';
-*/
-
     var removeIcon = document.createElement('i');
-    removeIcon.className = 'large red remove icon'
+    removeIcon.className = 'large red remove icon';
 
+	addIcon.addEventListener('click', function(){
+		proconController.addSupport(side, idx);
+	}, false);
+	
+	removeIcon.addEventListener('click', function(){
+		proconController.deleteProcon(idx);
+	}, false);
 
-//     row.appendChild(expandIcon);
     row.appendChild(addIcon);
-/*
-    row.appendChild(saveIcon);
-    row.appendChild(clearIcon);
-*/
+
     row.appendChild(removeIcon);
     return row;
   }
 
-  function createFunctionIoncsForSupport() {
+  function createFunctionIoncsForSupport(side, proconIdx, idx) {
     var row = document.createElement('div');
     row.className = 'supportIcon row';
 
-/*
-    var saveIcon = document.createElement('i');
-    saveIcon.className = 'large save icon';
-
-    var clearIcon = document.createElement('i');
-    clearIcon.className = 'large recycle icon';
-*/
-
     var removeIcon = document.createElement('i');
     removeIcon.className = 'large red remove icon';
+    
+    removeIcon.addEventListener("click", function(){
+	    proconController.deleteSupport(side, proconIdx, idx);
+    });
 
-/*
-    row.appendChild(saveIcon);
-    row.appendChild(clearIcon);
-*/
-    row.appendChild(removeIcon);
+	row.appendChild(removeIcon);
     return row;
   }
 
   // Supporting argument for claims
-  function createSupport(supportContent) {
+  function createSupport(side, proconIdx, idx, supportContent) {
 //     var title = createTitle(supportContent, 'support');
     var content = createContent(supportContent, 'support');
-    var icons = createFunctionIoncsForSupport();
+    var icons = createFunctionIoncsForSupport(side, proconIdx, idx);
     var support = document.createDocumentFragment();
 //     support.appendChild(title);
     content.appendChild(icons);
@@ -277,10 +261,11 @@ var proconView = (function($) {
   }
 
   // Pro or Con claims. Can contain multiple supporting argument.
-  function createClaim(claimRaw) {
+  function createClaim(side, idx, claimRaw) {
     var title = createTitle(claimRaw.content, "claim");
     // var buttons = createFunctionButtons();
-    var icons = createFunctionIconsForClaim();
+
+    var icons = createFunctionIconsForClaim(side, idx);
     var content = createContent(claimRaw.content, "claim");
     var claim = document.createElement('div');
     var children = document.createElement('div');
@@ -292,7 +277,7 @@ var proconView = (function($) {
 
 
     for (i = 0; i < claimRaw.support.length; i += 1) {
-      children.appendChild(createSupport(claimRaw.support[i].content));
+      children.appendChild(createSupport(side, idx, i, claimRaw.support[i].content));
     }
 
     // content.appendChild(buttons);
@@ -317,13 +302,13 @@ var proconView = (function($) {
 
   }
 
-  function render(proconData) {
+  function render() {
 
     var proandcon = $('#proandcon'),
         i;
     proandcon.html('');
 
-    for (i = 0; i < proconData.pro.length; i += 1) {
+    for (i = 0; i < proconDataRef.pro.length; i += 1) {
       // console.log(proconData.pro[i]);
       var row = document.createElement('div');
       row.className = 'row';
@@ -331,11 +316,11 @@ var proconView = (function($) {
       var pro = document.createElement('div');
       pro.className = 'pro six wide column';
 
-      pro.appendChild(createClaim(proconData.pro[i]));
+      pro.appendChild(createClaim('pro', i, proconDataRef.pro[i]));
 
       var con = document.createElement('div');
       con.className = 'con six wide column';
-      con.appendChild(createClaim(proconData.con[i]));
+      con.appendChild(createClaim('con', i, proconDataRef.con[i]));
 
       row.appendChild(pro);
       row.appendChild(con);
@@ -355,8 +340,8 @@ var proconController = (function () {
     initalizeView();
   }
 
-  function addSupport(claimIdx) {
-    proconModel.addSupport(claimIdx);
+  function addSupport(side, claimIdx) {
+    proconModel.addSupport(side, claimIdx);
     initalizeView();
   }
 
@@ -365,8 +350,8 @@ var proconController = (function () {
     initalizeView();
   }
 
-  function deleteSupport(claimIdx, supportIdx) {
-    proconModel.deleteSupport(claimIdx, supportIdx);
+  function deleteSupport(side, claimIdx, supportIdx) {
+    proconModel.deleteSupport(side, claimIdx, supportIdx);
     initalizeView();
   }
 
@@ -381,112 +366,10 @@ var proconController = (function () {
     $('.large.icon').css('cursor', 'pointer');
 
 
-/*
-    $(".claimIcon .expand.icon").click(function() {
-     	var curClaim = $(this).parent().parent();
-
-      var i;
-
-      // console.log(curClaim.find('.support.active.title').length);
-
-      if (curClaim.find('.support.active.title').length > 0) {
-        curClaim.find('.support.title').each(function() {
-          $(this).accordion('close');
-        });
-      } else {
-        var items = curClaim.find('.title');
-        for (i = 0; i < items.length; i += 1) {
-          $(items[i]).accordion({
-            exclusive: false,
-            duration: 350,
-          });
-          $(items[i]).accordion('open');
-        }
-      }
-
-		var supporting = $(curClaim.find('.supporting')[0]);
-		supporting.hide();
-		console.log(supporting);
-
-		if (supporting.is(":visible")) {
-			supporting.hide("fast");
-		} else {
-			supporting.show("fast");
-		}
-
-
-    });
-*/
-
-
-    $(".claimIcon .red.remove.icon").click(function() {
-
-      var item = $(this).parent().parent().parent();
-
-      var conClaimAccordions = $('.con .ui.accordion');
-      var conClaimIndex = conClaimAccordions.index(item);
-
-      var proClaimAccordions = $('.pro .ui.accordion');
-      var proClaimIndex = proClaimAccordions.index(item);
-
-      console.log('In red remove icon');
-      console.log(proClaimAccordions.index(item));
-
-      deleteProCon(Math.max(proClaimIndex, conClaimIndex));
-    });
-
-/*
-    $(".claimIcon .plus.icon").click(function() {
-
-      var item = $(this).parent().parent().parent();
-	  console.log(item);
-      var conClaimAccordions = $('.con .ui.accordion');
-      var conClaimIndex = conClaimAccordions.index(item);
-      
-      console.log(conClaimIndex);
-
-      var proClaimAccordions = $('.pro .ui.accordion');
-      var proClaimIndex = proClaimAccordions.index(item);
-	  console.log(proClaimIndex);
-
-      addSupport(Math.max(proClaimIndex, conClaimIndex));
-    });
-*/
-
-    $(".supportIcon .red.remove.icon").click(function() {
-      var item = $(this).parent().parent().parent().parent().parent();
-
-      var conClaimAccordions = $('.con .ui.accordion');
-      var conClaimIndex = conClaimAccordions.index(item);
-
-      var proClaimAccordions = $('.pro .ui.accordion');
-      var proClaimIndex = proClaimAccordions.index(item);
-
-      var claimIndex = Math.max(proClaimIndex, conClaimIndex);
-
-      // Get support index inside a claim
-      var curSupport = $(this).parent().parent();
-      var curClaim = $(this).parent().parent().parent();
-
-      var supportIndex = curClaim.find('.content').index(curSupport);
-      deleteSupport(claimIndex, supportIndex);
-    });
-
-/*
-    $(".recycle.icon").click(function () {
-      var item = $($(this).parent().parent().find('.editor')[0]);
-      item.attr('id', 'tmpAce');
-      var aceItem = ace.edit('tmpAce');
-
-      aceItem.getSession().setValue("");
-      item.removeAttr('id');
-
-
-    });
-*/
-    
     TogetherJS.reinitialize();
+ 
   }
+
 
   proconModel.init();
   var interval = setInterval(function () {
@@ -514,13 +397,14 @@ var proconController = (function () {
       $('#addProConButton').click(function(e) {
         addProCon();
       });
-      // $(document).click(function(event) {
-      //   var text = $(event.target).text();
-      //   console.log(text);
-      // });
     }
   }, 5);
 
+  return {
+	  addSupport: addSupport,
+	  deleteProCon: deleteProCon,
+	  deleteSupport: deleteSupport
+  };
 
 }());
 

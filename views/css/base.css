@@ -3,6 +3,11 @@
 height: 80px;
 width: 100%;
 }
+/* .accordion .title, .ui.style.accordion .title */
+.ui.styled.accordion .title {
+	color: rgba(0, 0, 0, 1);
+}
+
 .support .editor {
 	border-radius: .2857rem;
 	box-shadow: 0 1px 2px 0 rgba(0,0,0,.05),0 0 0 1px rgba(39,41,43,.15);

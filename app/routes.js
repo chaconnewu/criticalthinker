@@ -22,6 +22,10 @@ module.exports = function(app, passport) {
       res.render('signup.ejs');
   });
 
+  app.get('/instructor', function(req, res) {
+      res.render('instructor.ejs');
+  });
+
   // Facebook authentication
   app.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
 
@@ -41,6 +45,7 @@ module.exports = function(app, passport) {
       req.logout();
       res.redirect('/login');
   });
+  
 
 }
 

@@ -166,7 +166,7 @@ var proconView = (function($) {
     icon.className = 'dropdown icon';
 
     title.appendChild(icon);
-    title.appendChild(document.createTextNode(content.slice(0, 70) + ' ...'));
+    title.appendChild(document.createTextNode(content));
 
     return title;
   }
@@ -363,8 +363,8 @@ var proconController = (function () {
       exclusive: false,
       duration: 350,
     });
+    
     $('.large.icon').css('cursor', 'pointer');
-
 
     TogetherJS.reinitialize();
  

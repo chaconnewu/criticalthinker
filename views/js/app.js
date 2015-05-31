@@ -208,13 +208,9 @@ var proconView = (function($) {
 		var updatedContent = sender.getSession().getValue();
 		if (argumentType === 'claim') {
 			proconController.updateProConAtIndex(side, proconIndex, updatedContent);
-		} 
-		console.log(updatedContent);
-/*
-		else {
+		} else {
 			proconController.updateSupportingAtIndex(side, proconIndex, index, updatedContent);
 		}
-*/
 	});
     return content;
   }
@@ -422,12 +418,14 @@ var proconController = (function ($) {
   }
   
   function updateSupportingAtIndex(side, claimIdx, index, content){
-	  proconModel.updateSupportingAtIndex(side, claimIdx, inde, content);
+	  proconModel.updateSupportingAtIndex(side, claimIdx, index, content);
   }
   
   function initalizeView() {
     var data = proconModel.getProConData();
 // 	console.log(data._id);
+//	Need serious consideration about this!!!
+//	Current problem: _id property cannot be deleted on server side. Cannot figure out why.
 	delete data._id;
 // 	console.log(data._id);
     proconView.init(data);

@@ -6,7 +6,6 @@
 
 var MyApp = MyApp || {};
 
-
 var proconModel = (function($) {
   // Load procon data from server
   var proconData = {},
@@ -54,6 +53,7 @@ var proconModel = (function($) {
 
   function addSupport(side, claimIdx) {
     proconData[side][claimIdx].support.unshift(createEmptySupport());
+    updateServerProCon();
   }
 
   function deleteProConAtIndex(idx) {
@@ -65,6 +65,17 @@ var proconModel = (function($) {
 
   function deleteSupport(side, claimIdx, supportIdx) {
     proconData[side][claimIdx].support.splice(supportIdx, 1);
+    updateServerProCon();
+  }
+  
+  function updateProConAtIndex(side, claimIdx, content) {
+	  proconData[side][claimIdx].content = content;
+	  updateServerProCon();
+  }
+  
+  function updateSupportingAtIndex(side, claimIdx, index, content) {
+	  proconData[side][claimIdx].support[index].content = content;
+	  updateServerProCon();
   }
 
   function getDataReady() {
@@ -93,7 +104,9 @@ var proconModel = (function($) {
     deleteProConAtIndex: deleteProConAtIndex,
     deleteSupport: deleteSupport,
     getProConData: getProConData,
-    getDataReady: getDataReady
+    getDataReady: getDataReady,
+    updateProConAtIndex: updateProConAtIndex,
+    updateSupportingAtIndex: updateSupportingAtIndex
   };
 }(jQuery));
 
@@ -175,7 +188,7 @@ var proconView = (function($) {
     return title;
   }
 
-  function createContent(contentString, argumentType) {
+  function createContent(contentString, side, proconIndex, index, argumentType) {
     var content = document.createElement('div');
     content.className = argumentType + ' ' + 'active content';
 
@@ -185,7 +198,24 @@ var proconView = (function($) {
     editor.appendChild(document.createTextNode(contentString));
 
     content.appendChild(editor);
-
+ 
+	var aceEditor = ace.edit(editor);
+	aceEditor.getSession().setMode("ace/mode/text");
+	aceEditor.getSession().setUseWrapMode(true);
+	aceEditor.renderer.setShowGutter(false);
+	aceEditor.setHighlightActiveLine(false);
+	aceEditor.on('change', function(event, sender){
+		var updatedContent = sender.getSession().getValue();
+		if (argumentType === 'claim') {
+			proconController.updateProConAtIndex(side, proconIndex, updatedContent);
+		} 
+		console.log(updatedContent);
+/*
+		else {
+			proconController.updateSupportingAtIndex(side, proconIndex, index, updatedContent);
+		}
+*/
+	});
     return content;
   }
 
@@ -282,7 +312,7 @@ var proconView = (function($) {
 
   // Supporting argument for claims
   function createSupport(side, proconIdx, idx, supportContent) {
-    var content = createContent(supportContent, 'support');
+    var content = createContent(supportContent, side, proconIdx, idx, 'support');
     var icons = createFunctionIoncsForSupport(side, proconIdx, idx);
     var support = document.createDocumentFragment();
     content.appendChild(icons);
@@ -297,7 +327,7 @@ var proconView = (function($) {
     // var buttons = createFunctionButtons();
 
     var icons = createFunctionIconsForClaim(side, idx);
-    var content = createContent(claimRaw.content, "claim");
+    var content = createContent(claimRaw.content, side, idx, 0, "claim");
     var claim = document.createElement('div');
     var children = document.createElement('div');
 	var divider = document.createElement('div');
@@ -322,6 +352,7 @@ var proconView = (function($) {
   }
 
   function renderAceEditor() {
+/*
     var i;
     var elements = document.getElementsByClassName('editor');
     for (i = 0; i < elements.length; i += 1) {
@@ -331,6 +362,7 @@ var proconView = (function($) {
       aceEditor.renderer.setShowGutter(false);
       aceEditor.setHighlightActiveLine(false);
     }
+*/
   }
 
   function render() {
@@ -385,6 +417,14 @@ var proconController = (function ($) {
     initalizeView();
   }
 
+  function updateProConAtIndex(side, claimIdx, content) {
+	  proconModel.updateProConAtIndex(side, claimIdx, content);
+  }
+  
+  function updateSupportingAtIndex(side, claimIdx, index, content){
+	  proconModel.updateSupportingAtIndex(side, claimIdx, inde, content);
+  }
+  
   function initalizeView() {
     var data = proconModel.getProConData();
 // 	console.log(data._id);
@@ -440,7 +480,9 @@ var proconController = (function ($) {
 	  addSupport: addSupport,
 	  deleteProCon: deleteProCon,
 	  deleteSupport: deleteSupport,
-	  addProCon: addProCon
+	  addProCon: addProCon,
+	  updateProConAtIndex: updateProConAtIndex,
+	  updateSupportingAtIndex: updateSupportingAtIndex
   };
 
 }(jQuery));

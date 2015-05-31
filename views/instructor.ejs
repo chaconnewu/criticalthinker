@@ -1,42 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="./css/instructor.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.12.0/semantic.min.css" />
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 <script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.12.0/semantic.min.js"></script>
   <script src="http://jsblocks.com/jsblocks/blocks.js"></script>
 
   <style>
- #products > input {
-    font-size: 16px;
-    padding: 12px 16px;
-    width: 326px;
-    background: #ddf4e8;
-    border: 1px solid #54b07e;
-}
-.result-wrap {
-    margin-top: 10px;
-    border: 1px solid #dcdcdc;
-    background: #fbfbfb;
-    width: 360px;
-}
-.result-wrap .buttons-holder {
-    display: table-cell;
-}
-.buttons-holder > span {
-    cursor: pointer;
-    margin-left: 10px;
-    color: #2d8dc4;
-}
-.buttons-holder .btn-delete {
-    color: #e65f5f;
-}
-.result-wrap .value-holder {
-    display: table-cell;
-    border-right: 1px solid  #dcdcdc;
-    width: 220px;
-    padding: 10px;
-}
+
   </style>
 </head>
 <body>
@@ -48,56 +20,28 @@
     <a href='/logout' class='ui red label'>Logout</a>
   </div>
 </div>
-  <div id="products" data-query="view(Products)">
-    <input data-query="val(newProduct.name).keydown(keydown)" placeholder="Add a new topic here">
-    <div data-query="each(products)">
-      <div class="result-wrap">
-        <span data-query="visible(!editing())" class="value-holder">
-          {{name}}
-        </span>
-        <span data-query="visible(editing)" class="value-holder">
-          <input data-query="val(name)">
-        </span>
-        <span class="buttons-holder">
-            <span data-query="click(toggleEdit)">
-              {{editing() ? 'Update' : 'Edit'}}
-            </span>
-            <span data-query="click(remove)" class="btn-delete">Delete</span>
-        </span>
-      </div>
-    </div>
+	<div class='ui segment'>
+	<h1 class='ui header'>Adding/Removing Topics</h1>
+	<div id="products" data-query="view(Products)">
+	<input data-query="val(newProduct.name).keydown(keydown)" placeholder="Add a new topic here">
+	<div data-query="each(products)">
+	  <div class="result-wrap">
+	    <span data-query="visible(!editing())" class="value-holder">
+	      {{name}}
+	    </span>
+	    <span data-query="visible(editing)" class="value-holder">
+	      <input data-query="val(name)">
+	    </span>
+	    <span class="buttons-holder">
+	        <span data-query="click(toggleEdit)">
+	          {{editing() ? 'Update' : 'Edit'}}
+	        </span>
+	        <span data-query="click(remove)" class="btn-delete">Delete</span>
+	    </span>
+	  </div>
+	</div>
+	</div>
   </div>
-  <script>
-	var App = blocks.Application();
-	
-	var Product = App.Model({
-	  name: App.Property(),
-	
-	  editing: blocks.observable(false),
-	
-	  toggleEdit: function () {
-	    this.editing(!this.editing());
-	  },
-	
-	  remove: function () {
-	    this.destroy(true);
-	  }
-	});
-	
-	var Products = App.Collection(Product);
-	
-	App.View('Products', {
-	  newProduct: Product(),
-	
-	  products: Products([{ name: 'HTML' }, { name: 'CSS' }, { name: 'JavaScript' }]),
-	
-	  keydown: function (e) {
-	    if (e.which == 13) {
-	      this.products.add(this.newProduct);
-	      this.newProduct.reset();
-	    }
-	  }
-	});
-  </script>
+  <script src="./js/instructor.js"></script>
 </body>
 </html>

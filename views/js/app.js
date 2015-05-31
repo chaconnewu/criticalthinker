@@ -4,6 +4,9 @@
  *
  */
 
+var MyApp = MyApp || {};
+
+
 var proconModel = (function($) {
   // Load procon data from server
   var proconData = {},
@@ -50,7 +53,6 @@ var proconModel = (function($) {
   function addSupport(side, claimIdx) {
     proconData[0][side][claimIdx].support.unshift(createEmptySupport());
 //     proconData[0].con[claimIdx].support.unshift(createEmptySupport());
-    console.log(proconData);
   }
 
   function deleteProConAtIndex(idx) {
@@ -218,17 +220,34 @@ var proconView = (function($) {
     var removeIcon = document.createElement('i');
     removeIcon.className = 'large red remove icon';
 
-	addIcon.addEventListener('click', function(){
+	addIcon.addEventListener('click', function(e){
+
 		proconController.addSupport(side, idx);
+		console.log('sending add supporting');
+		TogetherJS.send({
+			type: "addSupporting", 
+			side: side, 
+			index: idx});
 	}, false);
 	
+	addIcon.setAttribute("data-content", "Add support to this claim.");
+	removeIcon.setAttribute("data-content", "Remove this pair of claims.");
+	$(addIcon).popup({
+		hoverable: true
+	});
+	
 	removeIcon.addEventListener('click', function(){
-		proconController.deleteProcon(idx);
+		proconController.deleteProCon(idx);
+		
 	}, false);
+	
+	$(removeIcon).popup({
+		hoverable: true
+	});
 
     row.appendChild(addIcon);
-
     row.appendChild(removeIcon);
+    
     return row;
   }
 
@@ -238,10 +257,20 @@ var proconView = (function($) {
 
     var removeIcon = document.createElement('i');
     removeIcon.className = 'large red remove icon';
-    
-    removeIcon.addEventListener("click", function(){
+	removeIcon.setAttribute("data-content", "Remove this support/backing.");
+	$(removeIcon).popup({
+		hoverable: true
+	});
+	    
+    removeIcon.addEventListener("click", function(e){
 	    proconController.deleteSupport(side, proconIdx, idx);
-    });
+	    console.log('fire togetherjs sync remove event');
+	    TogetherJS.send({
+		    type: "removeSupporting", 
+		    side: side, 
+		    proconIndex: proconIdx, 
+		    index: idx});
+    }, false);
 
 	row.appendChild(removeIcon);
     return row;
@@ -249,11 +278,9 @@ var proconView = (function($) {
 
   // Supporting argument for claims
   function createSupport(side, proconIdx, idx, supportContent) {
-//     var title = createTitle(supportContent, 'support');
     var content = createContent(supportContent, 'support');
     var icons = createFunctionIoncsForSupport(side, proconIdx, idx);
     var support = document.createDocumentFragment();
-//     support.appendChild(title);
     content.appendChild(icons);
     support.appendChild(content);
 
@@ -269,19 +296,20 @@ var proconView = (function($) {
     var content = createContent(claimRaw.content, "claim");
     var claim = document.createElement('div');
     var children = document.createElement('div');
+	var divider = document.createElement('div');
+	divider.className = 'ui divider';
 
     var i;
 
     claim.className = 'ui styled accordion';
     children.className = 'supporting';
 
-
     for (i = 0; i < claimRaw.support.length; i += 1) {
       children.appendChild(createSupport(side, idx, i, claimRaw.support[i].content));
     }
 
-    // content.appendChild(buttons);
     content.appendChild(icons);
+    content.appendChild(divider);
     content.appendChild(children);
     claim.appendChild(title);
     claim.appendChild(content);
@@ -299,7 +327,6 @@ var proconView = (function($) {
       aceEditor.renderer.setShowGutter(false);
       aceEditor.setHighlightActiveLine(false);
     }
-
   }
 
   function render() {
@@ -309,7 +336,6 @@ var proconView = (function($) {
     proandcon.html('');
 
     for (i = 0; i < proconDataRef.pro.length; i += 1) {
-      // console.log(proconData.pro[i]);
       var row = document.createElement('div');
       row.className = 'row';
 
@@ -334,7 +360,7 @@ var proconView = (function($) {
 }(jQuery));
 
 
-var proconController = (function () {
+var proconController = (function ($) {
   function addProCon() {
     proconModel.addProCon();
     initalizeView();
@@ -367,11 +393,11 @@ var proconController = (function () {
     $('.large.icon').css('cursor', 'pointer');
 
     TogetherJS.reinitialize();
- 
+
   }
 
-
   proconModel.init();
+  
   var interval = setInterval(function () {
     // console.log('set interval');
 
@@ -394,17 +420,55 @@ var proconController = (function () {
         });
       });
 
+/*
       $('#addProConButton').click(function(e) {
         addProCon();
+        console.log('sending addProCon');
+		TogetherJS.send({
+			type: "addProConPair"
+		});
       });
+*/
+	var addProConButton = document.getElementById('addProConButton');
+	addProConButton.addEventListener('click', function(){
+		addProCon();
+		TogetherJS.send({
+			type: "addProConPair"
+		});
+	}, false);
     }
   }, 5);
 
   return {
 	  addSupport: addSupport,
 	  deleteProCon: deleteProCon,
-	  deleteSupport: deleteSupport
+	  deleteSupport: deleteSupport,
+	  addProCon: addProCon
   };
 
-}());
+}(jQuery));
 
+TogetherJS.hub.on('addSupporting', function(msg){
+	if (!msg.sameUrl) {
+		return;
+	}		
+
+	proconController.addSupport(msg.side, msg.index);
+
+});
+
+TogetherJS.hub.on('removeSupporting', function(msg) {
+	if (!msg.sameUrl) {
+		return;
+	}
+  	proconController.deleteSupport(msg.side, msg.proconIndex, msg.index);
+});
+
+TogetherJS.hub.on('addProConPair', function(msg){
+	if (!msg.sameUrl) {
+		return;
+	}		
+	console.log('receving addProCon');
+	proconController.addProCon();
+
+});

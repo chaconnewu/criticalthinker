@@ -13,6 +13,10 @@ module.exports = function(app, passport) {
       res.send(JSON.stringify(data));
     });
   });
+  
+  app.get('/top_names', function(req, res) {
+	  
+  });
 
   app.get('/login', function(req, res) {
       res.render('login.ejs');
@@ -39,6 +43,10 @@ module.exports = function(app, passport) {
       user: req.user
     });
   });
+  
+  app.get('/list', function(req, res) {
+	  
+  });
 
   app.get('/logout', function(req, res) {
     console.log('log out');
@@ -53,6 +61,5 @@ function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
-
     res.redirect('/');
 }

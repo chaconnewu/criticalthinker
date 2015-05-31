@@ -10,16 +10,17 @@ var MyApp = MyApp || {};
 var proconModel = (function($) {
   // Load procon data from server
   var proconData = {},
+  		topic = "beast",
       dataReady = false;
 
   function fetchData() {
     $.ajax({
-      url: "/all_procons"
+      url: "/all_procons/"+topic
     })
     .done(function(data) {
       dataReady = true;
       proconData = data;
-
+	  console.log(proconData);
     });
   }
 
@@ -46,24 +47,24 @@ var proconModel = (function($) {
   }
 
   function addProCon() {
-    proconData[0].pro.unshift(createEmptyClaim());
-    proconData[0].con.unshift(createEmptyClaim());
+    proconData.pro.unshift(createEmptyClaim());
+    proconData.con.unshift(createEmptyClaim());
+    updateServerProCon();
   }
 
   function addSupport(side, claimIdx) {
-    proconData[0][side][claimIdx].support.unshift(createEmptySupport());
-//     proconData[0].con[claimIdx].support.unshift(createEmptySupport());
+    proconData[side][claimIdx].support.unshift(createEmptySupport());
   }
 
   function deleteProConAtIndex(idx) {
-    proconData[0].pro.splice(idx, 1);
-    proconData[0].con.splice(idx, 1);
+    proconData.pro.splice(idx, 1);
+    proconData.con.splice(idx, 1);
+    updateServerProCon();
 
   }
 
   function deleteSupport(side, claimIdx, supportIdx) {
-    proconData[0][side][claimIdx].support.splice(supportIdx, 1);
-//     proconData[0].con[claimIdx].support.splice(supportIdx, 1);
+    proconData[side][claimIdx].support.splice(supportIdx, 1);
   }
 
   function getDataReady() {
@@ -76,11 +77,12 @@ var proconModel = (function($) {
 
   function updateServerProCon() {
     $.ajax({
-      url: "/update_all_procons",
+      url: "/all_procons"+'/'+topic,
+      method: "put",
       data: proconData
     })
-    .done(function() {
-
+    .done(function(msg) {
+		console.log(msg);
     });
   }
 
@@ -238,7 +240,9 @@ var proconView = (function($) {
 	
 	removeIcon.addEventListener('click', function(){
 		proconController.deleteProCon(idx);
-		
+		TogetherJS.send({
+			type: "deleteProConPair", 
+			index: idx});		
 	}, false);
 	
 	$(removeIcon).popup({
@@ -383,8 +387,10 @@ var proconController = (function ($) {
 
   function initalizeView() {
     var data = proconModel.getProConData();
-
-    proconView.init(data[0]);
+// 	console.log(data._id);
+	delete data._id;
+// 	console.log(data._id);
+    proconView.init(data);
     $('.ui.accordion').accordion({
       exclusive: false,
       duration: 350,
@@ -420,22 +426,13 @@ var proconController = (function ($) {
         });
       });
 
-/*
-      $('#addProConButton').click(function(e) {
-        addProCon();
-        console.log('sending addProCon');
-		TogetherJS.send({
-			type: "addProConPair"
-		});
-      });
-*/
-	var addProConButton = document.getElementById('addProConButton');
-	addProConButton.addEventListener('click', function(){
-		addProCon();
-		TogetherJS.send({
-			type: "addProConPair"
-		});
-	}, false);
+		var addProConButton = document.getElementById('addProConButton');
+		addProConButton.addEventListener('click', function(){
+			addProCon();
+			TogetherJS.send({
+				type: "addProConPair"
+			});
+		}, false);
     }
   }, 5);
 
@@ -448,27 +445,3 @@ var proconController = (function ($) {
 
 }(jQuery));
 
-TogetherJS.hub.on('addSupporting', function(msg){
-	if (!msg.sameUrl) {
-		return;
-	}		
-
-	proconController.addSupport(msg.side, msg.index);
-
-});
-
-TogetherJS.hub.on('removeSupporting', function(msg) {
-	if (!msg.sameUrl) {
-		return;
-	}
-  	proconController.deleteSupport(msg.side, msg.proconIndex, msg.index);
-});
-
-TogetherJS.hub.on('addProConPair', function(msg){
-	if (!msg.sameUrl) {
-		return;
-	}		
-	console.log('receving addProCon');
-	proconController.addProCon();
-
-});

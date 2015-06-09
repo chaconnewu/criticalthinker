@@ -13,7 +13,7 @@ module.exports = function(app, passport) {
       res.send(JSON.stringify(data));
     });
   });
-  
+
   app.get('/all_procons/:topic', function(req, res) {
 	  var topic = req.params.topic;
 	  ProCon.findOne({'topic': topic}, {'_id': 0}, function(err, data){
@@ -22,7 +22,7 @@ module.exports = function(app, passport) {
 		  res.send(JSON.stringify(data));
 	  });
   });
-  
+
   app.put('/all_procons/:topic', function(req, res) {
 	  var topic = req.params.topic;
 	  var data = req.body;
@@ -35,9 +35,9 @@ module.exports = function(app, passport) {
 
 	  });
   });
-  
+
   app.get('/top_names', function(req, res) {
-	  
+
   });
 
   app.get('/login', function(req, res) {
@@ -71,7 +71,7 @@ module.exports = function(app, passport) {
       req.logout();
       res.redirect('/login');
   });
-}
+};
 
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {

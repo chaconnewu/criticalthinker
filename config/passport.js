@@ -30,7 +30,7 @@ module.exports = function(passport) {
       User.findOne({'facebook.id': profile.id}, function(err, user) {
 
         if (err) {
-          return done(err)
+          return done(err);
         }
 
         if (user) {

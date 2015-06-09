@@ -1,5 +1,5 @@
 /**
- * 
+ *
  *
  *
  */
@@ -67,12 +67,12 @@ var proconModel = (function($) {
     proconData[side][claimIdx].support.splice(supportIdx, 1);
     updateServerProCon();
   }
-  
+
   function updateProConAtIndex(side, claimIdx, content) {
 	  proconData[side][claimIdx].content = content;
 	  updateServerProCon();
   }
-  
+
   function updateSupportingAtIndex(side, claimIdx, index, content) {
 	  proconData[side][claimIdx].support[index].content = content;
 	  updateServerProCon();
@@ -113,11 +113,10 @@ var proconModel = (function($) {
 
 var proconView = (function($) {
 	var proconDataRef;
-	
+
   function init(proconData) {
     console.log('view init');
 	proconDataRef = proconData;
-//     render(proconData);
 	render();
     renderAceEditor();
     registerEvents();
@@ -198,20 +197,20 @@ var proconView = (function($) {
     editor.appendChild(document.createTextNode(contentString));
 
     content.appendChild(editor);
- 
-	var aceEditor = ace.edit(editor);
-	aceEditor.getSession().setMode("ace/mode/text");
-	aceEditor.getSession().setUseWrapMode(true);
-	aceEditor.renderer.setShowGutter(false);
-	aceEditor.setHighlightActiveLine(false);
-	aceEditor.on('change', function(event, sender){
-		var updatedContent = sender.getSession().getValue();
-		if (argumentType === 'claim') {
-			proconController.updateProConAtIndex(side, proconIndex, updatedContent);
-		} else {
-			proconController.updateSupportingAtIndex(side, proconIndex, index, updatedContent);
-		}
-	});
+
+  	var aceEditor = ace.edit(editor);
+  	aceEditor.getSession().setMode("ace/mode/text");
+  	aceEditor.getSession().setUseWrapMode(true);
+  	aceEditor.renderer.setShowGutter(false);
+  	aceEditor.setHighlightActiveLine(false);
+  	aceEditor.on('change', function(event, sender){
+  		var updatedContent = sender.getSession().getValue();
+  		if (argumentType === 'claim') {
+  			proconController.updateProConAtIndex(side, proconIndex, updatedContent);
+  		} else {
+  			proconController.updateSupportingAtIndex(side, proconIndex, index, updatedContent);
+		  }
+	  });
     return content;
   }
 
@@ -221,18 +220,18 @@ var proconView = (function($) {
 
     var expandButton = document.createElement('div');
     expandButton.className = "ui tiny button";
-    expandButton.appendChild(document.createTextNode('Expand'))
+    expandButton.appendChild(document.createTextNode('Expand'));
 
     var addButton = document.createElement('div');
     addButton.className = "ui tiny button";
-    addButton.appendChild(document.createTextNode('Add'))
+    addButton.appendChild(document.createTextNode('Add'));
 
     var removeButton = document.createElement('div');
     removeButton.className = "ui red tiny button";
-    removeButton.appendChild(document.createTextNode('Remove'))
+    removeButton.appendChild(document.createTextNode('Remove'));
 
     row.appendChild(expandButton);
-    row.appendChild(addButton)
+    row.appendChild(addButton);
     row.appendChild(removeButton);
 
     return row;
@@ -248,36 +247,37 @@ var proconView = (function($) {
     var removeIcon = document.createElement('i');
     removeIcon.className = 'large red remove icon';
 
-	addIcon.addEventListener('click', function(e){
+    addIcon.addEventListener('click', function(e){
 
 		proconController.addSupport(side, idx);
 		console.log('sending add supporting');
 		TogetherJS.send({
-			type: "addSupporting", 
-			side: side, 
+			type: "addSupporting",
+			side: side,
 			index: idx});
-	}, false);
-	
-	addIcon.setAttribute("data-content", "Add support to this claim.");
-	removeIcon.setAttribute("data-content", "Remove this pair of claims.");
-	$(addIcon).popup({
-		hoverable: true
-	});
-	
-	removeIcon.addEventListener('click', function(){
-		proconController.deleteProCon(idx);
-		TogetherJS.send({
-			type: "deleteProConPair", 
-			index: idx});		
-	}, false);
-	
-	$(removeIcon).popup({
-		hoverable: true
-	});
+	  }, false);
+
+    addIcon.setAttribute("data-content", "Add support to this claim.");
+    removeIcon.setAttribute("data-content", "Remove this pair of claims.");
+    $(addIcon).popup({
+    	hoverable: true
+    });
+
+  	removeIcon.addEventListener('click', function(){
+  		proconController.deleteProCon(idx);
+  		TogetherJS.send({
+  			type: "deleteProConPair",
+  			index: idx
+      });
+  	}, false);
+
+  	$(removeIcon).popup({
+  		hoverable: true
+  	});
 
     row.appendChild(addIcon);
     row.appendChild(removeIcon);
-    
+
     return row;
   }
 
@@ -287,22 +287,22 @@ var proconView = (function($) {
 
     var removeIcon = document.createElement('i');
     removeIcon.className = 'large red remove icon';
-	removeIcon.setAttribute("data-content", "Remove this support/backing.");
-	$(removeIcon).popup({
-		hoverable: true
-	});
-	    
+	  removeIcon.setAttribute("data-content", "Remove this support/backing.");
+  	$(removeIcon).popup({
+  		hoverable: true
+  	});
+
     removeIcon.addEventListener("click", function(e){
 	    proconController.deleteSupport(side, proconIdx, idx);
 	    console.log('fire togetherjs sync remove event');
 	    TogetherJS.send({
-		    type: "removeSupporting", 
-		    side: side, 
-		    proconIndex: proconIdx, 
+		    type: "removeSupporting",
+		    side: side,
+		    proconIndex: proconIdx,
 		    index: idx});
     }, false);
 
-	row.appendChild(removeIcon);
+	  row.appendChild(removeIcon);
     return row;
   }
 
@@ -326,8 +326,8 @@ var proconView = (function($) {
     var content = createContent(claimRaw.content, side, idx, 0, "claim");
     var claim = document.createElement('div');
     var children = document.createElement('div');
-	var divider = document.createElement('div');
-	divider.className = 'ui divider';
+	  var divider = document.createElement('div');
+	  divider.className = 'ui divider';
 
     var i;
 
@@ -416,11 +416,11 @@ var proconController = (function ($) {
   function updateProConAtIndex(side, claimIdx, content) {
 	  proconModel.updateProConAtIndex(side, claimIdx, content);
   }
-  
+
   function updateSupportingAtIndex(side, claimIdx, index, content){
 	  proconModel.updateSupportingAtIndex(side, claimIdx, index, content);
   }
-  
+
   function initalizeView() {
     var data = proconModel.getProConData();
 // 	console.log(data._id);
@@ -434,18 +434,15 @@ var proconController = (function ($) {
       exclusive: false,
       duration: 350,
     });
-    
+
     $('.large.icon').css('cursor', 'pointer');
 
     TogetherJS.reinitialize();
-
   }
 
   proconModel.init();
-  
-  var interval = setInterval(function () {
-    // console.log('set interval');
 
+  var interval = setInterval(function () {
     if (proconModel.getDataReady() === true) {
       clearInterval(interval);
 
@@ -459,19 +456,20 @@ var proconController = (function ($) {
           $(this).accordion('close');
         });
       });
+
       $('#expandAllButton').click(function(e) {
         $('.claim.title').each(function(){
           $(this).accordion('open');
         });
       });
 
-		var addProConButton = document.getElementById('addProConButton');
-		addProConButton.addEventListener('click', function(){
-			addProCon();
-			TogetherJS.send({
-				type: "addProConPair"
-			});
-		}, false);
+		  var addProConButton = document.getElementById('addProConButton');
+		  addProConButton.addEventListener('click', function(){
+  			addProCon();
+  			TogetherJS.send({
+  				type: "addProConPair"
+  			});
+		  }, false);
     }
   }, 5);
 
@@ -485,4 +483,3 @@ var proconController = (function ($) {
   };
 
 }(jQuery));
-

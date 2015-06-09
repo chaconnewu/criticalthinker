@@ -5,11 +5,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.12.0/semantic.min.css" />
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 <script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.12.0/semantic.min.js"></script>
-  <script src="http://jsblocks.com/jsblocks/blocks.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react-with-addons.min.js"></script>
+<script data-main="./js/instructor" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.18/require.min.js"></script>
 
-  <style>
-
-  </style>
 </head>
 <body>
 <div class="ui inverted menu">
@@ -20,28 +19,9 @@
     <a href='/logout' class='ui red label'>Logout</a>
   </div>
 </div>
-	<div class='ui segment'>
+<div class='ui segment'>
 	<h1 class='ui header'>Adding/Removing Topics</h1>
-	<div id="products" data-query="view(Products)">
-	<input data-query="val(newProduct.name).keydown(keydown)" placeholder="Add a new topic here">
-	<div data-query="each(products)">
-	  <div class="result-wrap">
-	    <span data-query="visible(!editing())" class="value-holder">
-	      {{name}}
-	    </span>
-	    <span data-query="visible(editing)" class="value-holder">
-	      <input data-query="val(name)">
-	    </span>
-	    <span class="buttons-holder">
-	        <span data-query="click(toggleEdit)">
-	          {{editing() ? 'Update' : 'Edit'}}
-	        </span>
-	        <span data-query="click(remove)" class="btn-delete">Delete</span>
-	    </span>
-	  </div>
-	</div>
-	</div>
-  </div>
+</div>
   <script src="./js/instructor.js"></script>
 </body>
 </html>

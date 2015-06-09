@@ -16,7 +16,8 @@ module.exports = function(app, passport) {
   
   app.get('/all_procons/:topic', function(req, res) {
 	  var topic = req.params.topic;
-	  ProCon.findOne({'topic': topic}, function(err, data){
+	  ProCon.findOne({'topic': topic}, {'_id': 0}, function(err, data){
+		  console.log(data);
 		  res.setHeader('Content-Type', 'application/json');
 		  res.send(JSON.stringify(data));
 	  });
@@ -25,12 +26,13 @@ module.exports = function(app, passport) {
   app.put('/all_procons/:topic', function(req, res) {
 	  var topic = req.params.topic;
 	  var data = req.body;
+/*
 	  console.log('in server put');
 	  console.log(req.body);
 	  console.log(topic);
+*/
 	  ProCon.update({'topic':topic}, data, {upsert: true}, function(err){
-		  console.log('error');
-		  console.log(err);
+
 	  });
   });
   
@@ -69,8 +71,6 @@ module.exports = function(app, passport) {
       req.logout();
       res.redirect('/login');
   });
-  
-
 }
 
 function isLoggedIn(req, res, next) {

@@ -426,7 +426,8 @@ var proconController = (function ($) {
 // 	console.log(data._id);
 //	Need serious consideration about this!!!
 //	Current problem: _id property cannot be deleted on server side. Cannot figure out why.
-	delete data._id;
+//	Solved on server
+// 	delete data._id;
 // 	console.log(data._id);
     proconView.init(data);
     $('.ui.accordion').accordion({
